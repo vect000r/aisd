@@ -1,18 +1,9 @@
-/*
-OBOWIĄZKOWE DO PRZESŁANIA: Implementacja dwóch algorytmów sortowania w C++, w tym co najmniej jednego zaawansowanego. 
-Funkcje sortujące muszą być szablonami, muszą mieć podany interfejs tablicowy lub z iteratorami, wystarczy użyć standardowego porównywania (operator<). 
-Proszę przesłać archiwum ZIP katalogu z programem, który zawiera Makefile i pliki źródłowe. 
-Program powinien kompilować się poleceniem 'make'.
-np. bubblesort, quicksort
-wystarczy na std::vector, ale musi by szablonem dzialajacym dla roznych typow.
-*/
-#include <iostream>
-#include <vector>
+#include "sorting.hpp"
 #include <algorithm>
 #include <cmath>
 
 template <typename T>
-void bubbleSort(T& arr , int start, int end) {
+void bubbleSort(T& arr, int start, int end) {
     bool swapped;
     for(int i = start; i< end - 1; i++){
         swapped = false;
@@ -30,13 +21,14 @@ void bubbleSort(T& arr , int start, int end) {
 
 template <typename T>
 void merge(T& arr, int left, int middle, int right){
-    std::vector<typename T::value_type> temp(right - left + 1); // tworzymy tymczasowy vector elementów typu T
+    std::vector<typename T::value_type> temp(right - left + 1); // tworze tymczasowy vector elementów typu T
     int left1 = left;
     int right1 = middle;
     int left2 = middle + 1;
     int right2 = right;
     int i = 0;
 
+    // przepisanie funkcji merge z lekcji 16 kursu Python na C++
     while(left1 <= right1 && left2 <= right2){
         if(arr[left1] <= arr[left2]){
             temp[i] = arr[left1];
@@ -60,12 +52,10 @@ void merge(T& arr, int left, int middle, int right){
         i++; 
     }
 
-    for(int j = 0; j < temp.size(); j++){
+    for(auto j = 0u; j < temp.size(); j++){
         arr[left + j] = temp[j];
     }
 };
-
-
 
 template <typename T>
 void mergeSort(T& arr, int left, int right){
@@ -86,20 +76,8 @@ void printArr(T& arr){
     std::cout << "\n";
 }
 
-int main() {
-    std::vector<int> v = { 9,4,7,3,6,8,2,1,5,0 };
-    int arr[10] = { 9,4,7,3,6,8,2,1,5,0 };
-
-    //bubbleSort(v1, 0, v1.size());
-    //bubbleSort(arr1, 0, 10);
-    mergeSort(v, 0, v.size() - 1);
-    std::cout << "Result of using mergeSort() on a vector:" << "\n";
-    printArr(v);
-    
-    bubbleSort(arr, 0, 10);
-    std::cout << "Result of using bubbleSort() on an array:" << "\n";
-    printArr(arr);
-    
-
-    return 0;
-}
+// Tworze instancje tych funkcji w zależności od potrzeb
+template void bubbleSort<int[10]>(int(&arr)[10], int start, int end);
+template void mergeSort<std::vector<int>>(std::vector<int>& arr, int left, int right);
+template void printArr<std::vector<int>>(std::vector<int>& arr);
+template void printArr<int[10]>(int(&arr)[10]);
