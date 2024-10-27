@@ -147,9 +147,4 @@ void ArrayList<T>::sort() {
     }
 }
 
-
-
-
-
 template class ArrayList<int>;
-//template void ArrayList<int>::push_front(const int& item);
