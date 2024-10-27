@@ -1,4 +1,4 @@
-// singlelist.h
+// singlelist.hpp
 
 #ifndef SINGLELIST_HPP
 #define SINGLELIST_HPP
@@ -59,76 +59,7 @@ public:
     // Jezeli pos=0, to wstawiamy na poczatek.
     // Jezeli pos=size(), to wstawiamy na koniec.
 };
-/*
-template <typename T>
-SingleList<T>::~SingleList() {
-    // I sposob.
-    for (SingleNode<T> *node; !empty(); ) {
-        node = head->next; // zapamietujemy
-        delete head;
-        head = node; // kopiowanie wskaznika
-    }
-    // II sposob.
-    // while (!empty()) { pop_front(); }
-}
 
-template <typename T>
-void SingleList<T>::push_front(const T& item) {
-    if (!empty()) {
-        head = new SingleNode<T>(item, head);
-    } else {
-        head = tail = new SingleNode<T>(item);
-    }
-}
-
-template <typename T>
-void SingleList<T>::push_back(const T& item) {
-    if (!empty()) {
-        tail->next = new SingleNode<T>(item);
-        tail = tail->next;
-    } else {
-        head = tail = new SingleNode<T>(item);
-    }
-}
-
-template <typename T>
-void SingleList<T>::display() {
-    SingleNode<T> *node = head;
-    while (node != nullptr){
-        std::cout << node->value << " ";
-        node = node->next;
-    }
-    std::cout << std::endl;
-}
-
-template <typename T>
-void SingleList<T>::pop_front() {
-    assert(!empty());
-    SingleNode<T> *node = head; // zapamietujemy
-    if (head == tail) { // jeden wezel na liscie
-        head = tail = nullptr;
-    } else { // wiecej niz jeden wezel na liscie
-        head = head->next;
-    }
-    delete node;
-}
-
-template <typename T>
-void SingleList<T>::pop_back() {
-    assert(!empty());
-    SingleNode<T> *node = tail; // zapamietujemy
-    if (head == tail) { // jeden wezel na liscie
-        head = tail = nullptr;
-    } else { // wiecej niz jeden wezel na liscie
-        // Szukamy poprzednika ogona.
-        SingleNode<T> *before=head;
-        while (before->next != tail) {
-            before = before->next;
-        }
-        tail = before;
-        tail->next = nullptr;
-    }
-    delete node;
-}
-*/
 #endif
+
+// EOF

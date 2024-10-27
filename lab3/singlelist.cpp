@@ -1,7 +1,5 @@
 #include "singlelist.hpp"
 
-
-
 template <typename T>
 SingleList<T>::SingleList(const SingleList& other) {
     head = tail = nullptr;
@@ -61,7 +59,6 @@ void SingleList<T>::push_back(const T& item) {
 template <typename T>
 void SingleList<T>::pop_front() {
     assert(!empty());
-    SingleNode<T> *node = head;
     if (head == tail) {
         head = tail = nullptr;
     } else {
