@@ -1,8 +1,8 @@
 CXX = g++
 LIBS =
 CXXFLAGS = -Wall -std=c++11
-OBJECTS = main.o arraylist.o
-HFILES = arraylist.hpp
+OBJECTS = main.o sorting.o
+HFILES = sorting.hpp
 TARGET = main.out
 
 %.o : %.cpp $(HFILES) Makefile
