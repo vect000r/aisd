@@ -39,25 +39,25 @@ void Deque<T>::pop_back() {
 template <typename T>
 T& Deque<T>::front() {
     assert(!empty());
-    return list.head->value;
+    return list.front();
 }
 
 template <typename T>
 const T& Deque<T>::front() const {
     assert(!empty());
-    return list.head->value;
+    return list.front();
 }
 
 template <typename T>
 T& Deque<T>::back() {
     assert(!empty());
-    return list.tail->value;
+    return list.back();
 }
 
 template <typename T>
 const T& Deque<T>::back() const {
     assert(!empty());
-    return list.tail->value;
+    return list.back();
 }
 
 template <typename T>

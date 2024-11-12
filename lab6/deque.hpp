@@ -9,12 +9,14 @@ private:
     DoubleList<T> list;
 
 public:
-    // Default constructor and destructor
+    // Default constructor 
     Deque() = default;
+    // Default destructor
     ~Deque() = default;
     
-    // Copy constructor and assignment operator
+    // Copy constructor 
     Deque(const Deque& other);
+    // Assignment operator
     Deque& operator=(const Deque& other);
     
     // Basic operations
