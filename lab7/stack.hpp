@@ -1,30 +1,81 @@
-// stack.hpp
 #ifndef STACK_HPP
 #define STACK_HPP
 
 #include <list>
+#include <iostream>
 
 template <typename T>
 class Stack {
-    std::list<T> stack;
 private:
-    Stack(std::size_t s = 10); // default constructor
-    ~Stack(stack.clear());  // default destructor
-    Stack(const Stack& other); // copy constructor
-    Stack(Stack&& other);   // move constructor
-    Stack& operator=(const Stack& other); // copy assignment operator, return *this
-    Stack& operator=(Stack&& other); // move assignment operator, return *this
-    bool empty() const { return stack.empty(); } // checks if the container has no elements
-    bool full() const { return stack.size() == stack.capacity(); }
-    std::size_t size() const { return stack.size(); }
-    std::size_t max_size() const { return stack.capacity(); }
-    void push(const T& item) { stack.push_back(item); }
-    void push(T&& item) { stack.push_back(std::move(item)); }
-    T& top() { return stack.back(); } // zwraca koniec, nie usuwa
-    void pop() { stack.pop_back(); } // usuwa koniec
-    void clear() { stack.clear(); }
-    void display();
+    std::list<T> stack;
 
+public:
+    // Constructor
+    explicit Stack(std::size_t s = 10) {} 
+    
+    // Destructor
+    ~Stack() = default;
+    
+    // Copy constructor
+    Stack(const Stack& other) : stack(other.stack) {}
+    
+    // Move constructor
+    Stack(Stack&& other) noexcept : stack(std::move(other.stack)) {}
+    
+    // Copy assignment operator
+    Stack& operator=(const Stack& other) {
+        if (this != &other) {
+            stack = other.stack;
+        }
+        return *this;
+    }
+    
+    // Move assignment operator
+    Stack& operator=(Stack&& other) noexcept {
+        if (this != &other) {
+            stack = std::move(other.stack);
+        }
+        return *this;
+    }
+    
+    // Stack operations
+    bool empty() const { return stack.empty(); }
+    
+    std::size_t size() const { return stack.size(); }
+    
+    void push(const T& item) { stack.push_back(item); }
+    
+    void push(T&& item) { stack.push_back(std::move(item)); }
+    
+    T& top() { 
+        if (empty()) {
+            throw std::runtime_error("Stack is empty");
+        }
+        return stack.back(); 
+    }
+    
+    const T& top() const { 
+        if (empty()) {
+            throw std::runtime_error("Stack is empty");
+        }
+        return stack.back(); 
+    }
+    
+    void pop() { 
+        if (empty()) {
+            throw std::runtime_error("Stack is empty");
+        }
+        stack.pop_back(); 
+    }
+    
+    void clear() { stack.clear(); }
+    
+    void display() const {
+        for (const auto& item : stack) {
+            std::cout << '\t' << item;
+        }
+        std::cout << '\n';
+    }
 };
 
 #endif
