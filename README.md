@@ -6,3 +6,4 @@ lab4 - Singly-linked List
 lab5 - Doubly-linked List
 lab6 - Deque
 lab7 - Stack (redesigned test suite)
+lab8 - Queue
