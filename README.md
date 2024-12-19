@@ -1,9 +1,35 @@
-# Coding exercises from my Algorithms and Data Structures course. Each directory represents one laboratory class.  
-## Directories and exercises:
-lab2 - bubble sort and merge sort implementation  
-lab3 - ADT List (array implementation)  
-lab4 - Singly-linked List  
-lab5 - Doubly-linked List
-lab6 - Deque
-lab7 - Stack (redesigned test suite)
-lab8 - Queue
+# Algorithms and Data Structures Course - Coding Exercises
+
+This repository contains the coding exercises from my **Algorithms and Data Structures** course. Each directory corresponds to a different laboratory class, where various fundamental data structures and algorithms are implemented and tested.
+
+## Directory Structure and Exercises:
+
+- **`lab2`**  
+  Bubble Sort and Merge Sort implementation
+
+- **`lab3`**  
+  ADT List (Array implementation)
+
+- **`lab4`**  
+  Singly Linked List
+
+- **`lab5`**  
+  Doubly Linked List
+
+- **`lab6`**  
+  Deque (Double-ended Queue)
+
+- **`lab7`**  
+  Stack (Redesigned test suite)
+
+- **`lab8`**  
+  Queue
+
+- **`lab9`**  
+  Priority Queue
+
+- **`lab10`**  
+  ADT Tree
+
+- **`lab11`**  
+  Binary Search Tree
