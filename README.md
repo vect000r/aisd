@@ -33,3 +33,6 @@ This repository contains the coding exercises from my **Algorithms and Data Stru
 
 - **`lab11`**  
   Binary Search Tree
+
+- **`lab12`**
+  AVL Tree
