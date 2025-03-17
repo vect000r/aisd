@@ -1,35 +1,31 @@
 #ifndef SETLINKED_HPP
 #define SETLINKED_HPP
 
-#include <vector>
 #include <iostream>
 
 struct Node {
-    bool value;
+    int index;       // Indeks elementu w uniwersum
     Node *next;
-    Node() : value(bool()), next(nullptr) {}
-    Node(const bool& item, Node *ptr=nullptr) : value(item), next(ptr) {}
+    Node() : index(-1), next(nullptr) {}
+    Node(const int& idx, Node *ptr=nullptr) : index(idx), next(ptr) {}
     ~Node() {}
 };
 
-
-
 class SetLinked {
-    Node *head, *tail;
-    size_t universeSize;
+    Node *head;
+    size_t universeSize;  // Rozmiar uniwersum (N)
 public:
     SetLinked(size_t N);
-    ~SetLinked() = default;
-    void clear() { elements.clear(); }
-    bool empty() const { return elements.size() == 0; }
+    ~SetLinked();
+    void clear();
+    bool empty() const;
     void add(int index);
     void remove(int index);
-    bool contains(int index);
+    bool contains(int index) const;
     SetLinked unionWith(const SetLinked& otherSet) const;
     SetLinked intersection(const SetLinked& otherSet) const;
     SetLinked difference(const SetLinked& otherSet) const;
     bool isIdentical(const SetLinked& otherSet) const;
-
 };
 
 #endif
