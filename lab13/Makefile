@@ -1,8 +1,8 @@
 CXX = g++
 LIBS =
 CXXFLAGS = -Wall -std=c++11
-OBJECTS = main.o 
-HFILES = avl.hpp
+OBJECTS = main.o dictionarySimple.o setLinked.o setSimple.o
+HFILES = dictionarySimple.hpp setLinked.hpp setSimple.hpp
 TARGET = main.out
 
 %.o : %.cpp $(HFILES) Makefile

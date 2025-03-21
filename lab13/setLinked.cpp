@@ -13,6 +13,11 @@ void SetLinked::clear() {
     }
 }
 
+SetLinked::~SetLinked() {
+    clear();
+}
+
+
 bool SetLinked::empty() const {
     return head == nullptr;
 }
