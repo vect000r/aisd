@@ -17,14 +17,13 @@ SetLinked::~SetLinked() {
     clear();
 }
 
-
 bool SetLinked::empty() const {
     return head == nullptr;
 }
 
 void SetLinked::add(int index) {
-    if (index < 0 || index > static_cast<int>(universeSize)) {
-        throw std::out_of_range("Indeks poza zakresem");
+    if (index < 0 || index >= static_cast<int>(universeSize)) {
+        throw std::out_of_range("Index out of range");
     }
 
     if (head == nullptr || head->index > index) {
@@ -37,7 +36,7 @@ void SetLinked::add(int index) {
     }
 
     Node *current = head;
-    while(current->next != nullptr && current->next->index < index) {
+    while (current->next != nullptr && current->next->index < index) {
         current = current->next;
     }
 
@@ -49,15 +48,15 @@ void SetLinked::add(int index) {
 }
 
 void SetLinked::remove(int index) {
-    if (index < 0 || index > static_cast<int>(universeSize)) {
-        throw std::out_of_range("Indeks poza zakresem");
+    if (index < 0 || index >= static_cast<int>(universeSize)) {
+        throw std::out_of_range("Index out of range");
     }
 
     if (head == nullptr) {
         return;
     }
 
-    if (head->index == index) {
+   if (head->index == index) {
         Node *temp = head;
         head = head->next;
         delete temp;
@@ -65,24 +64,24 @@ void SetLinked::remove(int index) {
     }
 
     Node *current = head;
-    while(current->next != nullptr && current->next->index < index) {
+    while (current->next != nullptr && current->next->index < index) {
         current = current->next;
     }
 
     if (current->next != nullptr && current->next->index == index) {
-        Node *temp = current;
-        current = current->next;
-        delete  temp;
+        Node *temp = current->next;
+        current->next = temp->next;
+        delete temp;
     }
 }
 
 bool SetLinked::contains(int index) const {
-    if (index < 0 || index > static_cast<int>(universeSize)) {
-        throw std::out_of_range("Indeks poza zakresem");
+    if (index < 0 || index >= static_cast<int>(universeSize)) {
+        throw std::out_of_range("Index out of range");
     }
     
     Node *current = head;
-    while(current->next != nullptr && current->next->index < index) {
+    while (current != nullptr && current->index < index) {
         current = current->next;
     }
     
@@ -91,19 +90,19 @@ bool SetLinked::contains(int index) const {
 
 SetLinked SetLinked::unionWith(const SetLinked& otherSet) const {
     if (universeSize != otherSet.universeSize) {
-        throw std::invalid_argument("Rozmiary uniwersów muszą być te same!");
+        throw std::invalid_argument("Universe sizes must be the same!");
     }
 
     SetLinked result(universeSize);
 
     Node *current = head;
-    while(current != nullptr) {
+    while (current != nullptr) {
         result.add(current->index);
         current = current->next;
     }
 
     current = otherSet.head;
-    while(current != nullptr) {
+    while (current != nullptr) {
         result.add(current->index);
         current = current->next;
     }
@@ -113,14 +112,14 @@ SetLinked SetLinked::unionWith(const SetLinked& otherSet) const {
 
 SetLinked SetLinked::intersection(const SetLinked& otherSet) const {
     if (universeSize != otherSet.universeSize) {
-        throw std::invalid_argument("Rozmiary uniwersów muszą być te same!");
+        throw std::invalid_argument("Universe sizes must be the same!");
     }
 
     SetLinked result(universeSize);
 
     Node *current = head;
-    while(current != nullptr) {
-        if (contains(current->index) && otherSet.contains(current->index)) {
+    while (current != nullptr) {
+        if (otherSet.contains(current->index)) {
             result.add(current->index);
         }
         current = current->next;
@@ -131,14 +130,14 @@ SetLinked SetLinked::intersection(const SetLinked& otherSet) const {
 
 SetLinked SetLinked::difference(const SetLinked& otherSet) const {
     if (universeSize != otherSet.universeSize) {
-        throw std::invalid_argument("Rozmiary uniwersów muszą być te same!");
+        throw std::invalid_argument("Universe sizes must be the same!");
     }
 
     SetLinked result(universeSize);
 
     Node *current = head;
-    while(current != nullptr) {
-        if (contains(current->index) && !otherSet.contains(current->index)) {
+    while (current != nullptr) {
+        if (!otherSet.contains(current->index)) {
             result.add(current->index);
         }
         current = current->next;

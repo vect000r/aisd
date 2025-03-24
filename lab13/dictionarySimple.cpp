@@ -1,5 +1,5 @@
 #include "dictionarySimple.hpp"
-#include <algorithm> // dla std::find
+#include <algorithm> 
 
 dictionarySimple::dictionarySimple() : size(0) {}
 

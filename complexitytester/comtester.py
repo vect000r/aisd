@@ -21,4 +21,4 @@ x = np.array(n)
 y = np.array(t)
 
 plt.plot(x, y)
-plt.savefig("plots/1")
+plt.savefig("plots/setSimpleUnion")
