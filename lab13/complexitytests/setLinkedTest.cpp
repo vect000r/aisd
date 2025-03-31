@@ -201,14 +201,17 @@ int main() {
     
     // Define test sizes - using exponentially increasing values
     // For linked implementation, we might want to use smaller sizes for some tests
-    std::vector<int> sizes = {10, 100, 1000, 5000, 10000};
-    std::vector<int> largerSizes = {10, 100, 1000};
+    std::vector<int> sizes;
+    for (int i = 100; i <= 1000; ++i) {
+        sizes.push_back(i);
+    }
+    
     
     // Run tests
     testAdd(sizes, resultDir);
     testContains(sizes, resultDir);
-    testUnion(largerSizes, resultDir); // Using smaller sizes for potentially O(n²) operations
-    testIntersection(largerSizes, resultDir);
+    testUnion(sizes, resultDir); // Using smaller sizes for potentially O(n²) operations
+    testIntersection(sizes, resultDir);
     testIsIdentical(sizes, resultDir);
     
     return 0;
