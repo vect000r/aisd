@@ -1,0 +1,20 @@
+rodzic na p:
+lewy potomek: 2 * p
+prawy potomek: 2 * p + 1
+
+pozycja węzła na p:
+pozycja rodzica: p // 2
+
+wrzucanie elementu do kolejki: -> insert
+
+chcemy wrzucić 7 do kopca
+
+jednowymiarowa lista elementów, zawsze możemy wrzucić na koniec listy.
+
+ale może to doprowadzić do tego, że kopiec będzie nieuporządkowany (kopiec uporządkowany gdy rodzic jest mniejszy lub równy od potomków)
+potrzebujemy więc metody percolate_up
+
+zamieniamy 7 z jego rodzicem i sprawdzamy czy dalej jest problem, jeśli tak to powtarzamy.
+metode percolate_up wywolujemy w srodku insert
+
+percolate_down - sytuacja gdy na górze sterty jest element o wyższym priorytecie niż jego dzieci

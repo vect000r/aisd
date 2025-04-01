@@ -19,4 +19,4 @@ x = np.array(n)
 y = np.array(t)
 
 plt.plot(x, y)
-plt.savefig("plots/dictionarySimpleRemove")
+plt.savefig("plots/setSimpleContains")

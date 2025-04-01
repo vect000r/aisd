@@ -6,6 +6,7 @@
 #include <random>
 #include <string>
 
+// powtorzyc pomiar sto razy i wziąć średnią
 // Function to measure time for an operation
 template<typename Func>
 double measureTime(Func operation) {
