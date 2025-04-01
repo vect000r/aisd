@@ -4,7 +4,8 @@ import numpy as np
 n = []
 t = []
 
-path_to_file = input("Provide the tester with the path to the .txt file, eg. ../lab13/complexitytests/setSimpleResults/add_results.txt")
+filename = input("Provide the tester with the name of the .txt file")
+path_to_file = "../lab13/complexitytests/setSimpleResults/" + filename
 
 with open(f"{path_to_file}", "r") as data:
     for line in data:
@@ -19,4 +20,4 @@ x = np.array(n)
 y = np.array(t)
 
 plt.plot(x, y)
-plt.savefig("plots/setSimpleContains")
+plt.savefig("plots/setSimpleUnion.png")

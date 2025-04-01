@@ -179,7 +179,10 @@ int main() {
     ensureDirectoryExists(resultDir);
     
     // Define test sizes - limited by ARRAY_SIZE in dictionarySimple
-    std::vector<int> sizes = {10, 50, 100, 200, 500, 1000};
+    std::vector<int> sizes;
+    for (int i = 100; i <= 1000; ++i) {
+        sizes.push_back(i);
+    }
     
     // Run tests
     testInsert(sizes, resultDir);

@@ -170,8 +170,11 @@ void testIsIdentical(const std::vector<int>& sizes) {
 }
 
 int main() {
-    // Define test sizes - using exponentially increasing values
-    std::vector<int> sizes = {10, 100, 1000, 10000, 100000, 1000000};
+    // Define test sizes - using exponentially increasing values    
+    std::vector<int> sizes;
+    for (int i = 100; i <= 1000; ++i) {
+        sizes.push_back(i);
+    }
     
     // Run tests
     testAdd(sizes);
