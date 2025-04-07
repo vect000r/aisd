@@ -27,7 +27,7 @@ public:
     bool empty() const;
     void push(int index);
     void pop(int index);
-    bool contains(int index);
+    bool contains(int index) const;
     SetHashed unionWith(const SetHashed& otherSet) const;
     SetHashed intersection(const SetHashed& otherSet) const;
     SetHashed difference(const SetHashed& otherSet) const;

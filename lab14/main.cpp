@@ -4,7 +4,6 @@
 #include "setSimple.hpp"
 #include "setHashed.hpp"
 
-// Zmodyfikowana funkcja testująca funkcje przyporządkowania zbiorów z ilustracją działania
 void testSetMappings() {
     std::cout << "\n===== TESTY FUNKCJI PRZYPORZĄDKOWANIA ZBIORÓW =====\n" << std::endl;
     
@@ -169,58 +168,78 @@ void testSetHashed() {
         std::cout << "Empty test passed!\n";
     }
 
-    // Test push
+    // Test push i contains
     {
         SetHashed set(10);
         set.push(1);
         set.push(2);
         set.push(3);
         assert(!set.empty());
-        std::cout << "Push test passed!\n";
+        assert(set.contains(1));
+        assert(set.contains(2));
+        assert(set.contains(3));
+        assert(!set.contains(4));
+        std::cout << "Push i contains test passed!\n";
     }
 
     // Test pop
     {
         SetHashed set(10);
         set.push(1);
+        set.push(2);
+        assert(set.contains(1));
         set.pop(1);
+        assert(!set.contains(1));
+        assert(set.contains(2));
+        set.pop(2);
         assert(set.empty());
         std::cout << "Pop test passed!\n";
-    }
-
-    // Test contains
-    {
-        SetHashed set(10);
-        set.push(1);
-        assert(set.contains(1));
-        std::cout << "Contains test passed!\n";
     }
 
     // Test unionWith
     {
         SetHashed set1(10);
         SetHashed set2(10);
-        SetHashed result(20);
+        
+        // Dodajemy elementy do pierwszego zbioru
         set1.push(1);
         set1.push(2);
+        
+        // Dodajemy elementy do drugiego zbioru
         set2.push(3);
         set2.push(4);
-        result = set1.unionWith(set2);
-        assert(result.contains(1) && result.contains(3));
+        
+        // Kopiujemy zawartość pierwszego zbioru
+        SetHashed result(10);
+        result.push(1);
+        result.push(2);
+        
+        // I dodajemy zawartość drugiego zbioru
+        result.push(3);
+        result.push(4);
+        
+        // Teraz porównujemy result z sumą zbiorów
+        SetHashed unionResult = set1.unionWith(set2);
+        
+        assert(unionResult.contains(1));
+        assert(unionResult.contains(2));
+        assert(unionResult.contains(3));
+        assert(unionResult.contains(4));
+        
         std::cout << "unionWith test passed!\n";
     }
-
     // Test intersection
     {
         SetHashed set1(10);
         SetHashed set2(10);
-        SetHashed result(20);
         set1.push(1);
         set1.push(2);
         set2.push(2);
         set2.push(3);
-        result = set1.intersection(set2);
+        SetHashed result = set1.intersection(set2);
+        assert(!result.contains(1));
         assert(result.contains(2));
+        assert(!result.contains(3));
         std::cout << "Intersection test passed!\n";
     }
 
@@ -228,13 +247,14 @@ void testSetHashed() {
     {
         SetHashed set1(10);
         SetHashed set2(10);
-        SetHashed result(20);
         set1.push(1);
         set1.push(2);
         set2.push(1);
         set2.push(3);
-        result = set1.difference(set2);
+        SetHashed result = set1.difference(set2);
+        assert(!result.contains(1));
         assert(result.contains(2));
+        assert(!result.contains(3));
         std::cout << "Difference test passed!\n";
     }
 
@@ -243,13 +263,21 @@ void testSetHashed() {
         SetHashed set1(10);
         SetHashed set2(10);
         set1.push(1);
+        set1.push(2);
         set2.push(1);
+        set2.push(2);
+        assert(set1.isIdentical(set2));
+        
+        set1.push(3);
+        assert(!set1.isIdentical(set2));
+        
+        set2.push(3);
         assert(set1.isIdentical(set2));
         std::cout << "isIdentical test passed!\n"; 
     }
+    
     std::cout << "\n===== WSZYSTKIE TESTY ZAKONCZONE SUKCESEM =====\n";
 }
-
 
 
 
