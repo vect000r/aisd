@@ -32,7 +32,7 @@ double measureTime(Func operation) {
     auto end = std::chrono::high_resolution_clock::now();
     
     // Return time in microseconds
-    return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
 }
 
 // Function to save results to file
@@ -115,10 +115,13 @@ void testUnion(const std::vector<int>& sizes, const std::string& resultDir) {
         std::uniform_int_distribution<> distrib(0, n-1);
         
         // Pre-populate the sets with random elements
-        for (size_t i = 0; i < n/2; i++) {
-            set1.add(distrib(gen));
-            set2.add(distrib(gen));
-        }
+        // Add some unique elements to each set
+    for (size_t i = 0; i < n/4; i++) {
+        int val1 = distrib(gen);
+        int val2 = distrib(gen);
+        if (!set1.contains(val1)) set1.add(val1);
+        if (!set2.contains(val2)) set2.add(val2);
+    }
         
         // Time the union operation
         double time = measureTime([&]() {
@@ -147,13 +150,16 @@ void testIntersection(const std::vector<int>& sizes, const std::string& resultDi
         for (size_t i = 0; i < n/2; i++) {
             int val = distrib(gen);
             set1.add(val);
-            set2.add(val); // Add some common elements
+            set2.add(val); 
         }
         
         // Add some unique elements to each set
+        // Add some unique elements to each set
         for (size_t i = 0; i < n/4; i++) {
-            set1.add(distrib(gen) + n);
-            set2.add(distrib(gen) + n*2);
+            int val1 = distrib(gen);
+            int val2 = distrib(gen);
+            if (!set1.contains(val1)) set1.add(val1);
+            if (!set2.contains(val2)) set2.add(val2);
         }
         
         // Time the intersection operation
@@ -195,22 +201,21 @@ void testIsIdentical(const std::vector<int>& sizes, const std::string& resultDir
 }
 
 int main() {
-    // Create results directory
     std::string resultDir = "setLinkedResults";
     ensureDirectoryExists(resultDir);
     
-    // Define test sizes - using exponentially increasing values
-    // For linked implementation, we might want to use smaller sizes for some tests
+    
     std::vector<int> sizes;
     for (int i = 100; i <= 1000; ++i) {
         sizes.push_back(i);
     }
     
+
+
     
-    // Run tests
     testAdd(sizes, resultDir);
     testContains(sizes, resultDir);
-    testUnion(sizes, resultDir); // Using smaller sizes for potentially O(n²) operations
+    testUnion(sizes, resultDir);
     testIntersection(sizes, resultDir);
     testIsIdentical(sizes, resultDir);
     

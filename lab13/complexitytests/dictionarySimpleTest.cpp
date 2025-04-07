@@ -174,17 +174,14 @@ void testRemove(const std::vector<int>& sizes, const std::string& resultDir) {
 }
 
 int main() {
-    // Create results directory
     std::string resultDir = "dictionarySimpleResults";
     ensureDirectoryExists(resultDir);
     
-    // Define test sizes - limited by ARRAY_SIZE in dictionarySimple
     std::vector<int> sizes;
     for (int i = 100; i <= 1000; ++i) {
         sizes.push_back(i);
     }
     
-    // Run tests
     testInsert(sizes, resultDir);
     testContains(sizes, resultDir);
     testRemove(sizes, resultDir);

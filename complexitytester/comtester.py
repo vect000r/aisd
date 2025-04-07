@@ -5,7 +5,7 @@ n = []
 t = []
 
 filename = input("Provide the tester with the name of the .txt file")
-path_to_file = "../lab13/complexitytests/setSimpleResults/" + filename
+path_to_file = "../lab13/complexitytests/dictionarySimpleResults/" + filename
 
 with open(f"{path_to_file}", "r") as data:
     for line in data:
@@ -20,4 +20,4 @@ x = np.array(n)
 y = np.array(t)
 
 plt.plot(x, y)
-plt.savefig("plots/setSimpleUnion.png")
+plt.savefig("plots/dictionarySimpleRemove.png")

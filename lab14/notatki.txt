@@ -1,0 +1,5 @@
+pięć kubełków, każdemu kubełkowi przypisujemy indeks.
+
+chcąc wrzucić 7 do zbioru, bierzemy resztę z dzielenia 7 przez ilość kubełków. W każdym kubełku mamy strukturę danych reprezentującą zbiór (np. pięć posortowanych list łączonych)
+
+(haszowanie otwarte)
