@@ -6,10 +6,10 @@ bool SetHashed::empty() const {
             return false;
         }
     }
-    return true; 
+    return true;
 }
 
-bool SetHashed::contains(int index) const { 
+bool SetHashed::contains(int index) const {
     return buckets[hash(index)].contains(index);
 }
 
@@ -34,62 +34,70 @@ void SetHashed::pop(int index) {
     buckets[hash(index)].remove(index);
 }
 
+
 SetHashed SetHashed::unionWith(const SetHashed& otherSet) const {
-    
     SetHashed result(bucketCount);
     
-    for (int i = 0; i < 10; ++i) {  
-        if (this->contains(i)) {
-            result.push(i);
+    // Create and process a separate result for each bucket
+    for (int i = 0; i < bucketCount; ++i) {
+        // For each bucket index, add all elements from this bucket to the result
+        try {
+            // We need to iterate through the range that might contain valid elements
+            for (int j = 0; j < bucketCount * 10; ++j) {  
+                // Only check elements that would hash to this bucket
+                if (hash(j) == i && buckets[i].contains(j)) {
+                    result.push(j);
+                }
+            }
+            
+            // And add all elements from the other bucket to the result
+            for (int j = 0; j < bucketCount * 10; ++j) {  
+                // Only check elements that would hash to this bucket
+                if (hash(j) == i && otherSet.buckets[i].contains(j)) {
+                    result.push(j);
+                }
+            }
+        } catch (const std::out_of_range&) {
+            continue;
         }
     }
-    
-    for (int i = 0; i < 10; ++i) {
-        if (otherSet.contains(i)) {
-            result.push(i);
-        }
-    }
-    
     return result;
 }
 
-// Poprawiona implementacja intersection
 SetHashed SetHashed::intersection(const SetHashed& otherSet) const {
     SetHashed result(bucketCount);
     
-    // Znajdujemy wspólne elementy obu zbiorów
-    for (int i = 0; i < 1000; ++i) { // Przyjmujemy rozsądny zakres indeksów
+    for (int i = 0; i < bucketCount; ++i) {
         try {
-            if (this->contains(i) && otherSet.contains(i)) {
-                result.push(i);
+            // We need to iterate through the range that might contain valid elements
+            for (int j = 0; j < bucketCount * 10; ++j) {  
+                // Only check elements that would hash to this bucket
+                if (hash(j) == i && buckets[i].contains(j) && otherSet.buckets[i].contains(j)) {
+                    result.push(j);
+                }
             }
         } catch (const std::out_of_range&) {
-            // Jeśli indeks jest poza zakresem, po prostu go pomijamy
             continue;
         }
     }
-    
     return result;
 }
 
-// Poprawiona implementacja difference
 SetHashed SetHashed::difference(const SetHashed& otherSet) const {
     SetHashed result(bucketCount);
     
-    // Znajdujemy elementy obecne w this, ale nieobecne w otherSet
-    for (int i = 0; i < 1000; ++i) { // Przyjmujemy rozsądny zakres indeksów
+    for (int i = 0; i < bucketCount; ++i) {
         try {
-            if (this->contains(i) && !otherSet.contains(i)) {
-                result.push(i);
+            // We need to iterate through the range that might contain valid elements
+            for (int j = 0; j < bucketCount * 10; ++j) {  
+                // Only check elements that would hash to this bucket
+                if (hash(j) == i && buckets[i].contains(j) && !otherSet.buckets[i].contains(j)) {
+                    result.push(j);
+                }
             }
         } catch (const std::out_of_range&) {
-            // Jeśli indeks jest poza zakresem, po prostu go pomijamy
             continue;
         }
     }
-    
     return result;
 }
-
-
-
