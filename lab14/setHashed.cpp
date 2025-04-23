@@ -36,31 +36,27 @@ void SetHashed::pop(int index) {
 
 
 SetHashed SetHashed::unionWith(const SetHashed& otherSet) const {
+    if (bucketCount != otherSet.bucketCount) {
+        throw std::invalid_argument("Sets must have the same bucket count");
+    }
+    
     SetHashed result(bucketCount);
     
-    // Create and process a separate result for each bucket
-    for (int i = 0; i < bucketCount; ++i) {
-        // For each bucket index, add all elements from this bucket to the result
+    const int maxCheckValue = 10; 
+    
+    for (int val = 0; val <= maxCheckValue; val++) {
+        int bucketIdx = hash(val);
         try {
-            // We need to iterate through the range that might contain valid elements
-            for (int j = 0; j < bucketCount * 10; ++j) {  
-                // Only check elements that would hash to this bucket
-                if (hash(j) == i && buckets[i].contains(j)) {
-                    result.push(j);
-                }
-            }
-            
-            // And add all elements from the other bucket to the result
-            for (int j = 0; j < bucketCount * 10; ++j) {  
-                // Only check elements that would hash to this bucket
-                if (hash(j) == i && otherSet.buckets[i].contains(j)) {
-                    result.push(j);
-                }
+            // Check if the value exists in either set
+            if (buckets[bucketIdx].contains(val) || otherSet.buckets[bucketIdx].contains(val)) {
+                result.push(val);
             }
         } catch (const std::out_of_range&) {
+            // Skip values that are out of range
             continue;
         }
     }
+    
     return result;
 }
 

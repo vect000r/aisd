@@ -23,8 +23,15 @@ void testSetMappings() {
         
         std::cout << "\nSprawdzanie obecności poszczególnych elementów:" << std::endl;
         for (int i = n - 2; i <= m + 2; i++) {
+            bool belongs = false;
+            if (i >= n && i <= m) {
+                int index = i - n;
+                if (index < universeSize) {
+                    belongs = set.contains(index);
+                }
+            }
             std::cout << "  Czy " << i << " należy do zbioru? " 
-                      << (set.contains(i - 1) ? "TAK" : "NIE") << std::endl;
+                      << (belongs ? "TAK" : "NIE") << std::endl;
         }
         
         // Test z n >= m (pusty zbiór)
@@ -34,7 +41,7 @@ void testSetMappings() {
         
         // Test z wartościami przekraczającymi rozmiar uniwersum
         std::cout << "\nTest z wartościami przekraczającymi rozmiar uniwersum:" << std::endl;
-        int smallUniverseSize = 10;
+        int smallUniverseSize = 4; // Ustawiamy mały rozmiar uniwersum, aby pokazać ograniczenie
         SetSimple limitedSet = createSetConsecutiveIntegers(smallUniverseSize, 5, 20);
         std::cout << "Zbiór liczb od 5 do 20 z uniwersum rozmiaru " << smallUniverseSize << ":" << std::endl;
         printConsecutiveIntegersSet(limitedSet, smallUniverseSize, 5);
@@ -55,23 +62,16 @@ void testSetMappings() {
         printEvenStepIntegersSet(set, universeSize, n);
         
         std::cout << "\nSprawdzanie obecności poszczególnych elementów:" << std::endl;
-        // Sprawdzamy kilka elementów z krokiem 1, aby pokazać, że tylko co drugi element jest w zbiorze
-        for (int i = n; i <= n + 10; i++) {
-            std::cout << "  Czy " << i << " należy do zbioru? ";
-            
-            // Obliczamy indeks dla tego elementu
-            int index;
-            if ((i - n) % 2 == 0) {  // Element z krokiem 2
-                index = (i - n) / 2;
-            } else {
-                index = -1;  // Element nie należy do wzorca
+        for (int i = n - 2; i <= m + 2; i++) {
+            bool belongs = false;
+            if (i >= n && i <= m && (i - n) % 2 == 0) {
+                int index = (i - n) / 2;
+                if (index < universeSize) {
+                    belongs = set.contains(index);
+                }
             }
-            
-            if (index >= 0 && index < universeSize && set.contains(index)) {
-                std::cout << "TAK" << std::endl;
-            } else {
-                std::cout << "NIE" << std::endl;
-            }
+            std::cout << "  Czy " << i << " należy do zbioru? " 
+                      << (belongs ? "TAK" : "NIE") << std::endl;
         }
         
         // Test z n >= m (pusty zbiór)
@@ -81,7 +81,7 @@ void testSetMappings() {
         
         // Test z wartościami przekraczającymi rozmiar uniwersum
         std::cout << "\nTest z wartościami przekraczającymi rozmiar uniwersum:" << std::endl;
-        int smallUniverseSize = 5;
+        int smallUniverseSize = 3; // Ustawiamy mały rozmiar uniwersum
         SetSimple limitedSet = createSetEvenStepIntegers(smallUniverseSize, 3, 25);
         std::cout << "Zbiór liczb od 3 do 25 z krokiem 2 z uniwersum rozmiaru " 
                   << smallUniverseSize << ":" << std::endl;
@@ -103,19 +103,22 @@ void testSetMappings() {
         std::cout << "\nSprawdzanie obecności poszczególnych liter:" << std::endl;
         char testLetters[] = {'a', 'e', 'j', 'z', 'A', '1'};
         for (char c : testLetters) {
-            std::cout << "  Czy '" << c << "' należy do zbioru? ";
+            bool belongs = false;
             if (c >= 'a' && c <= 'z') {
-                std::cout << (set.contains(c - 'a') ? "TAK" : "NIE") << std::endl;
-            } else {
-                std::cout << "NIE (poza zakresem a-z)" << std::endl;
+                int index = c - 'a';
+                if (index < universeSize) {
+                    belongs = set.contains(index);
+                }
             }
+            
+            std::cout << "  Czy '" << c << "' należy do zbioru? " 
+                      << (belongs ? "TAK" : "NIE") << std::endl;
         }
         
         // Test z mniejszym rozmiarem uniwersum
         std::cout << "\nTest z mniejszym rozmiarem uniwersum:" << std::endl;
         int smallUniverseSize = 10;
         SetSimple smallSet = createSetLetters(smallUniverseSize);
-        std::cout << "Zbiór liter z uniwersum rozmiaru " << smallUniverseSize << ":" << std::endl;
         printLettersSet(smallSet, smallUniverseSize);
     }
     
@@ -129,19 +132,23 @@ void testSetMappings() {
                   << universeSize << ")" << std::endl;
         
         SetSimple set = createSetTwoLetterStrings(universeSize);
-        
-        // Wyświetlamy tylko część zbioru, bo jest duży
         printTwoLetterStringsSet(set, universeSize, 15);
         
         std::cout << "\nTestowanie mapowania między napisami a indeksami:" << std::endl;
         std::string testStrings[] = {"aa", "ab", "az", "ba", "zz", "a", "abc", "1a"};
         for (const std::string& str : testStrings) {
-            int index = mapTwoLetterStringToIndex(str);
             std::cout << "  Mapowanie '" << str << "' -> ";
             
-            if (index != -1) {
-                std::cout << index << " -> " << mapIndexToTwoLetterString(index);
-                std::cout << " (należy do zbioru: " << (set.contains(index) ? "TAK" : "NIE") << ")" << std::endl;
+            if (str.length() == 2 && str[0] >= 'a' && str[0] <= 'z' && str[1] >= 'a' && str[1] <= 'z') {
+                int index = (str[0] - 'a') * 26 + (str[1] - 'a');
+                std::cout << index;
+                
+                if (index < universeSize) {
+                    std::cout << " (należy do zbioru: " << (set.contains(index) ? "TAK" : "NIE") << ")";
+                } else {
+                    std::cout << " (poza zakresem uniwersum)";
+                }
+                std::cout << std::endl;
             } else {
                 std::cout << "nieprawidłowy napis (nie należy do zbioru)" << std::endl;
             }
@@ -151,7 +158,6 @@ void testSetMappings() {
         std::cout << "\nTest z mniejszym rozmiarem uniwersum:" << std::endl;
         int smallUniverseSize = 30;
         SetSimple smallSet = createSetTwoLetterStrings(smallUniverseSize);
-        std::cout << "Zbiór dwuliterowych napisów z uniwersum rozmiaru " << smallUniverseSize << ":" << std::endl;
         printTwoLetterStringsSet(smallSet, smallUniverseSize, 15);
     }
     

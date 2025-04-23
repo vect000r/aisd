@@ -77,15 +77,16 @@ bool SetSimple::isIdentical(const SetSimple& otherSet) const {
 }
 
 // Funkcja dla zbioru liczb całkowitych n, n+1, n+2, ..., m gdzie n < m
-SetSimple createSetConsecutiveIntegers(size_t universeSize, int n, int m)  {
+SetSimple createSetConsecutiveIntegers(size_t universeSize, int n, int m) {
     SetSimple set(universeSize);
     
     if (n >= m) {
         return set; // Pusty zbiór jeśli warunek n < m nie jest spełniony
     }
     
-    for (int i = n; i <= m && i < static_cast<int>(universeSize); i++) {
-        set.add(i - 1); // Odejmujemy 1, zakładając że zbiór jest indeksowany od 0
+    // Mapowanie: wartość n+i odpowiada indeksowi i
+    for (int i = 0; i <= m - n && i < static_cast<int>(universeSize); i++) {
+        set.add(i);
     }
     
     return set;
@@ -99,34 +100,37 @@ SetSimple createSetEvenStepIntegers(size_t universeSize, int n, int m) {
         return set; // Pusty zbiór jeśli warunek n < m nie jest spełniony
     }
     
-    for (int i = n; i <= m && i < static_cast<int>(universeSize); i += 2) {
-        set.add(i - 1); // Odejmujemy 1, zakładając że zbiór jest indeksowany od 0
+    // Mapowanie: wartość n+2k odpowiada indeksowi k
+    int k = 0;
+    for (int val = n; val <= m && k < static_cast<int>(universeSize); val += 2, k++) {
+        set.add(k);
     }
     
     return set;
 }
 
 // Funkcja dla zbioru liter a, b, c, ..., z bez polskich znaków
-SetSimple createSetLetters(size_t universeSize)  {
+SetSimple createSetLetters(size_t universeSize) {
     SetSimple set(universeSize);
     
-    for (char c = 'a'; c <= 'z' && (c - 'a') < static_cast<int>(universeSize); c++) {
-        set.add(c - 'a'); // Mapujemy 'a' na 0, 'b' na 1, itd.
+    // Mapowanie: litera 'a'+i odpowiada indeksowi i
+    for (int i = 0; i < 26 && i < static_cast<int>(universeSize); i++) {
+        set.add(i);
     }
     
     return set;
 }
 
 // Funkcja dla zbioru dwuliterowych napisów, gdzie każda litera jest z zakresu a-z bez polskich znaków
-SetSimple createSetTwoLetterStrings(size_t universeSize)  {
+SetSimple createSetTwoLetterStrings(size_t universeSize) {
     SetSimple set(universeSize);
-    int index = 0;
     
-    for (char c1 = 'a'; c1 <= 'z'; c1++) {
-        for (char c2 = 'a'; c2 <= 'z'; c2++) {
+    // Mapowanie: napis składający się z liter 'a'+i oraz 'a'+j odpowiada indeksowi i*26+j
+    for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 26; j++) {
+            int index = i * 26 + j;
             if (index < static_cast<int>(universeSize)) {
                 set.add(index);
-                index++;
             } else {
                 return set; // Przerwij jeśli przekroczono rozmiar uniwersum
             }
@@ -136,29 +140,10 @@ SetSimple createSetTwoLetterStrings(size_t universeSize)  {
     return set;
 }
 
-// Pomocnicza funkcja do mapowania dwuliterowego napisu na indeks
-int mapTwoLetterStringToIndex(const std::string& str) {
-    if (str.length() != 2 || str[0] < 'a' || str[0] > 'z' || str[1] < 'a' || str[1] > 'z') {
-        return -1; // Nieprawidłowy napis
-    }
-    
-    return (str[0] - 'a') * 26 + (str[1] - 'a');
-}
+// Poprawione funkcje pomocnicze do wyświetlania zbiorów
+// ======================================================
 
-// Pomocnicza funkcja do mapowania indeksu na dwuliterowy napis
-std::string mapIndexToTwoLetterString(int index) {
-    if (index < 0 || index >= 26 * 26) {
-        return ""; // Nieprawidłowy indeks
-    }
-    
-    std::string result = "aa";
-    result[0] = 'a' + (index / 26);
-    result[1] = 'a' + (index % 26);
-    
-    return result;
-}
-
-// Funkcja do wyświetlania elementów zbioru dla pierwszego przypadku
+// Funkcja do wyświetlania elementów zbioru liczb całkowitych od n
 void printConsecutiveIntegersSet(const SetSimple& set, size_t universeSize, int n) {
     std::cout << "Zbiór liczb całkowitych od " << n << " zawiera: {";
     bool first = true;
@@ -167,14 +152,14 @@ void printConsecutiveIntegersSet(const SetSimple& set, size_t universeSize, int 
             if (!first) {
                 std::cout << ", ";
             }
-            std::cout << (i + n);  // Przywracamy oryginalną wartość
+            std::cout << (n + i);  // Wartość n+i dla indeksu i
             first = false;
         }
     }
     std::cout << "}" << std::endl;
 }
 
-// Funkcja do wyświetlania elementów zbioru dla drugiego przypadku
+// Funkcja do wyświetlania elementów zbioru z krokiem 2
 void printEvenStepIntegersSet(const SetSimple& set, size_t universeSize, int n) {
     std::cout << "Zbiór liczb całkowitych od " << n << " z krokiem 2 zawiera: {";
     bool first = true;
@@ -183,7 +168,7 @@ void printEvenStepIntegersSet(const SetSimple& set, size_t universeSize, int n) 
             if (!first) {
                 std::cout << ", ";
             }
-            std::cout << (n + (i * 2));  // Przywracamy oryginalną wartość
+            std::cout << (n + 2*i);  // Wartość n+2i dla indeksu i
             first = false;
         }
     }
@@ -212,12 +197,14 @@ void printTwoLetterStringsSet(const SetSimple& set, size_t universeSize, int lim
     bool first = true;
     int count = 0;
     
-    for (size_t i = 0; i < universeSize && i < 26 * 26 && count < limit; i++) {
+    for (size_t i = 0; i < universeSize && i < 26*26 && count < limit; i++) {
         if (set.contains(i)) {
             if (!first) {
                 std::cout << ", ";
             }
-            std::cout << mapIndexToTwoLetterString(i);
+            char first_char = 'a' + (i / 26);
+            char second_char = 'a' + (i % 26);
+            std::cout << first_char << second_char;
             first = false;
             count++;
         }
@@ -227,20 +214,5 @@ void printTwoLetterStringsSet(const SetSimple& set, size_t universeSize, int lim
         std::cout << ", ...";
     }
     
-    std::cout << "}" << std::endl;
-}
-
-void printSetElements(const SetSimple& set, size_t universeSize) {
-    std::cout << "Zbiór zawiera elementy: {";
-    bool first = true;
-    for (size_t i = 0; i < universeSize; i++) {
-        if (set.contains(i)) {
-            if (!first) {
-                std::cout << ", ";
-            }
-            std::cout << i;
-            first = false;
-        }
-    }
     std::cout << "}" << std::endl;
 }
