@@ -5,19 +5,19 @@ SetSimple::SetSimple(size_t N) : universeSize(N) {
 }
 
 void SetSimple::add(int index) {
-    if (index >= 0 && index < universeSize) {
+    if (index >= 0 && static_cast<size_t>(index) < universeSize) {
         elements[index] = true;
     }
 }
 
 void SetSimple::remove(int index) {
-    if (index >= 0 && index < universeSize) {
+    if (index >= 0 && static_cast<size_t>(index) < universeSize) {
         elements[index] = false;
     }
 }
 
 bool SetSimple::contains(int index) const {
-    return (index >= 0 && index < universeSize) && elements[index];
+    return (index >= 0 && static_cast<size_t>(index) < universeSize) && elements[index];
 }
 
 SetSimple SetSimple::unionWith(const SetSimple& otherSet) const {
@@ -210,8 +210,54 @@ void printTwoLetterStringsSet(const SetSimple& set, size_t universeSize, int lim
         }
     }
     
-    if (count == limit && universeSize > limit) {
+    if (count == limit && universeSize > static_cast<size_t>(limit)) {
         std::cout << ", ...";
+    }
+    
+    std::cout << "}" << std::endl;
+}
+
+// Function to map an index to a two-letter string
+std::string mapIndexToTwoLetterString(int index) {
+    std::string result = "aa"; // Default
+    
+    if (index >= 0 && index < 26*26) {
+        char first_char = 'a' + (index / 26);
+        char second_char = 'a' + (index % 26);
+        result[0] = first_char;
+        result[1] = second_char;
+    }
+    
+    return result;
+}
+
+// Function to map a two-letter string to an index
+int mapTwoLetterStringToIndex(const std::string& str) {
+    if (str.length() != 2 || 
+        str[0] < 'a' || str[0] > 'z' || 
+        str[1] < 'a' || str[1] > 'z') {
+        return -1; // Invalid input
+    }
+    
+    int first_char_value = str[0] - 'a';
+    int second_char_value = str[1] - 'a';
+    
+    return first_char_value * 26 + second_char_value;
+}
+
+// Function to print all elements in a set
+void printSetElements(const SetSimple& set, size_t universeSize) {
+    std::cout << "Set elements: {";
+    bool first = true;
+    
+    for (size_t i = 0; i < universeSize; i++) {
+        if (set.contains(static_cast<int>(i))) {
+            if (!first) {
+                std::cout << ", ";
+            }
+            std::cout << i;
+            first = false;
+        }
     }
     
     std::cout << "}" << std::endl;
