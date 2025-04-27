@@ -96,6 +96,114 @@ class LinkedListSet:
             current = current.next
         return "{" + ",".join(elements) + "}"
     
+    def union(self, other_set):
+        """
+        Returns a new set that is the union of this set and other_set
+        Time Complexity: O(n + m) where n and m are the sizes of the two sets
+        """
+        result = LinkedListSet()
+        curr1 = self.head
+        curr2 = other_set.head
+        
+        # Process both lists until one is exhausted
+        while curr1 is not None and curr2 is not None:
+            if curr1.index < curr2.index:
+                # Add element from first set
+                result.add(curr1.index)
+                curr1 = curr1.next
+            elif curr2.index < curr1.index:
+                # Add element from second set
+                result.add(curr2.index)
+                curr2 = curr2.next
+            else:  # Equal indices
+                # Add element (only once)
+                result.add(curr1.index)
+                curr1 = curr1.next
+                curr2 = curr2.next
+        
+        # Process remaining elements from first list
+        while curr1 is not None:
+            result.add(curr1.index)
+            curr1 = curr1.next
+        
+        # Process remaining elements from second list
+        while curr2 is not None:
+            result.add(curr2.index)
+            curr2 = curr2.next
+        
+        return result
+
+    def intersection(self, other_set):
+        """
+        Returns a new set that is the intersection of this set and other_set
+        Time Complexity: O(n + m) where n and m are the sizes of the two sets
+        """
+        result = LinkedListSet()
+        curr1 = self.head
+        curr2 = other_set.head
+        
+        # Process both lists simultaneously
+        while curr1 is not None and curr2 is not None:
+            if curr1.index < curr2.index:
+                # Skip element from first set
+                curr1 = curr1.next
+            elif curr2.index < curr1.index:
+                # Skip element from second set
+                curr2 = curr2.next
+            else:  # Equal indices - add to result
+                result.add(curr1.index)
+                curr1 = curr1.next
+                curr2 = curr2.next
+        
+        return result
+
+    def difference(self, other_set):
+        """
+        Returns a new set that is the difference of this set and other_set (self - other)
+        Time Complexity: O(n + m) where n and m are the sizes of the two sets
+        """
+        result = LinkedListSet()
+        curr1 = self.head
+        curr2 = other_set.head
+        
+        # Process both lists simultaneously
+        while curr1 is not None and curr2 is not None:
+            if curr1.index < curr2.index:
+                # Element in first set but not in second - add to result
+                result.add(curr1.index)
+                curr1 = curr1.next
+            elif curr2.index < curr1.index:
+                # Skip elements in second set but not in first
+                curr2 = curr2.next
+            else:  # Equal indices - skip both
+                curr1 = curr1.next
+                curr2 = curr2.next
+        
+        # Add remaining elements from first set
+        while curr1 is not None:
+            result.add(curr1.index)
+            curr1 = curr1.next
+        
+        return result
+
+    def is_identical(self, other_set):
+        """
+        Checks if two sets are identical
+        Time Complexity: O(n) where n is the size of the smaller set
+        """
+        curr1 = self.head
+        curr2 = other_set.head
+        
+        while curr1 is not None and curr2 is not None:
+            # If indices don't match, sets are not identical
+            if curr1.index != curr2.index:
+                return False
+            
+            curr1 = curr1.next
+            curr2 = curr2.next
+        
+        # Both lists must be exhausted for sets to be identical
+        return curr1 is None and curr2 is None
 
 # Example usage
 s = LinkedListSet()
