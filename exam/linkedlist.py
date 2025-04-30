@@ -29,7 +29,7 @@ class LinkedListSet:
             current = current.next
         
         # Insert the new node
-        new_node.next = current.next
+        new_node.next = current.nextD
         current.next = new_node
 
     def remove(self, element):
@@ -50,6 +50,9 @@ class LinkedListSet:
         # If element was found
         if current.next and current.next.index == element:
             current.next = current.next.next
+        
+        self.add(element)
+
 
     def contains(self, element):
         """Check if an element is in the set. Time Complexity: O(n)"""
