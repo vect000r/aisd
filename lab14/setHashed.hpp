@@ -14,11 +14,11 @@ private:
     }
 
 public:
-    SetHashed(int size = 10) : bucketCount(size) {
-        buckets.reserve(size);
-        for (int i = 0; i < size; i++) {
-            size_t bucket_size = size;
-            buckets.emplace_back(bucket_size);
+    SetHashed(size_t size = 10) : bucketCount(size) {
+        // Explicitly construct each bucket with the given size
+        buckets.clear();
+        for (size_t i = 0; i < size; ++i) {
+            buckets.emplace_back(size);  // Use constructor directly
         }
     }
     

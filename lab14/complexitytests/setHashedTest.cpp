@@ -55,6 +55,26 @@ void testPush(const std::vector<int>& sizes) {
     saveResults("setHashedResults/push_results.txt", results);
 }
 
+void testPushPessimistic(const std::vector<int>& sizes) {
+    std::vector<std::pair<int, double>> results;
+
+    for (size_t n : sizes) {
+        SetHashed set(n);
+        
+        double time = measureTime([&]() {
+            for (size_t i = 0; i < n; i++) {
+
+                set.push(10);
+            }
+        });
+        
+        results.push_back({n, time});
+        std::cout << "Push pessimistic test - Size: " << n << ", Time: " << time << " μs" << std::endl;
+    }
+    
+    saveResults("setHashedResults/push_pessimistic_results.txt", results);
+}
+
 // Test pop
 void testPop(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
@@ -236,6 +256,7 @@ int main() {
     }
 
     testPush(sizes);
+    testPushPessimistic(sizes);
     testPop(sizes);
     testContains(sizes);
     testUnionWith(sizes);
