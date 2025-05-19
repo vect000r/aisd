@@ -50,3 +50,7 @@ void PriorityQueue::display() const {
     }
     std::cout << "}" << std::endl;
 }
+
+bool PriorityQueue::isEmpty() const {
+    return queue.empty();
+}

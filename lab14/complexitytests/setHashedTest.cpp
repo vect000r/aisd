@@ -104,6 +104,38 @@ void testPop(const std::vector<int>& sizes) {
     saveResults("setHashedResults/pop_results.txt", results);
 }
 
+void testPopPessimistic(const std::vector<int>& sizes) {
+    std::vector<std::pair<int, double>> results;
+    
+    for (size_t n : sizes) {
+        SetHashed set(n);
+        
+        // Use a specific modulus to make elements hash to the same bucket
+        // We'll insert elements that all have the same remainder when divided by n
+        const int REMAINDER = 0;  // Could be any value between 0 and n-1
+        
+        // Pre-populate the set with elements that will all hash to the same bucket
+        for (size_t i = 0; i < n; i++) {
+            // This will ensure all elements have the same remainder (REMAINDER) when divided by n
+            // i * n + REMAINDER ensures all values hash to the same bucket
+            int value = REMAINDER + i;  // Just use small increasing values with same remainder
+            set.push(value);
+        }
+        
+        // Time the operation of removing these colliding elements
+        double time = measureTime([&]() {
+            for (size_t i = 0; i < n; i++) {
+                set.pop(REMAINDER + i);
+            }
+        });
+        
+        results.push_back({n, time});
+        std::cout << "Pop pessimistic test - Size: " << n << ", Time: " << time << " μs" << std::endl;
+    }
+    
+    saveResults("setHashedResults/pop_pessimistic_results.txt", results);
+}
+
 // Test contains
 void testContains(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
@@ -258,6 +290,7 @@ int main() {
     testPush(sizes);
     testPushPessimistic(sizes);
     testPop(sizes);
+    testPopPessimistic(sizes);
     testContains(sizes);
     testUnionWith(sizes);
     testIntersection(sizes);

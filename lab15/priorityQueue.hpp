@@ -16,6 +16,7 @@ public:
     void add(int index);
     int removeMin();
     void display() const;
+    bool isEmpty() const;
 };
 
 

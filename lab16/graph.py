@@ -14,3 +14,9 @@ def neighbours(g, x):
             nei.append(i)
     return nei
 
+def adjacent(g, x, y):
+    if g[x][y] == 1:
+        return True
+    else:
+        return False
+    

@@ -1,0 +1,5 @@
+2 zadanie zestaw 6:
+dfs, patrz na [źródło] (topological sorting)
+
+3 zadanie:
+poczytaj [źródło]
