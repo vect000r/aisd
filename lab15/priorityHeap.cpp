@@ -1,6 +1,6 @@
 #include "priorityHeap.hpp"
 
-// Helper function to maintain heap property by moving up
+
 void PriorityHeap::percolateUp(size_t index) {
     // Keep going up the heap as long as the parent is greater than the current element
     while (index > 0 && heap[parent(index)] > heap[index]) {
@@ -11,7 +11,7 @@ void PriorityHeap::percolateUp(size_t index) {
     }
 }
 
-// Helper function to maintain heap property by moving down
+
 void PriorityHeap::percolateDown(size_t index) {
     size_t smallest = index;
     size_t left = leftChild(index);
@@ -35,7 +35,7 @@ void PriorityHeap::percolateDown(size_t index) {
     }
 }
 
-// Get the priority (value) at given index
+
 int PriorityHeap::priority(int index) const {
     if (index < 0 || index >= static_cast<int>(heap.size())) {
         throw std::out_of_range("Index out of range");
@@ -43,33 +43,27 @@ int PriorityHeap::priority(int index) const {
     return heap[index];
 }
 
-// Add a new element to the priority queue
+
 void PriorityHeap::add(int value) {
     if (isFull()) {
         throw std::overflow_error("Priority queue is full");
     }
     
-    // Add the new element at the end of the heap
     heap.push_back(value);
     
-    // Maintain the heap property by heapifying up
     percolateUp(heap.size() - 1);
 }
 
-// Remove and return the minimum element
 int PriorityHeap::removeMin() {
     if (isEmpty()) {
         throw std::underflow_error("Priority queue is empty");
     }
     
-    // The minimum element is at the root of the min-heap
     int min = heap[0];
     
-    // Replace the root with the last element
     heap[0] = heap.back();
     heap.pop_back();
     
-    // If the heap is not empty, maintain the heap property
     if (!isEmpty()) {
         percolateDown(0);
     }
@@ -77,7 +71,6 @@ int PriorityHeap::removeMin() {
     return min;
 }
 
-// Display the elements of the priority queue
 void PriorityHeap::display() const {
     std::cout << "Priority Queue (heap): ";
     for (const auto& element : heap) {

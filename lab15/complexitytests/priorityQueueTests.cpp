@@ -33,28 +33,34 @@ void saveResults(const std::string& filename, const std::vector<std::pair<int, d
     }
 }
 
-// Test removeMin for heap-based PriorityQueue
+// Test removeMin for heap-based PriorityQueue with additional debugging
 void testRemoveMinHeap(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
     std::random_device rd;
     std::mt19937 gen(rd());
 
     for (size_t n : sizes) {
-        PriorityQueue pq(n);
-        std::uniform_int_distribution<> distrib(0, n*10);  // Large range to ensure variety
-        
-        // Pre-populate the priority queue with random elements
-        for (size_t i = 0; i < n; i++) {
-            pq.add(distrib(gen));
-        }
-        
-        // Time the operation of removing min element
-        double time = 0.0;
         try {
+           
+            PriorityHeap pq(n);
+            std::uniform_int_distribution<> distrib(0, n*10);  
+           
+            for (size_t i = 0; i < n; i++) {
+                int value = distrib(gen);
+                try {
+                    pq.add(value);
+
+                } catch (const std::exception& e) {
+                    std::cerr << "Error during heap add at i=" << i << ": " << e.what() << std::endl;
+                    throw; 
+                }
+            }
+            
+            double time = 0.0;
             time = measureTime([&]() {
-                // We'll test removeMin multiple times to get a more stable measurement
-                size_t operations = std::min(n, size_t(100));  // At most 100 operations for large n
-                for (size_t i = 0; i < operations && !pq.isEmpty(); i++) {
+               
+                size_t operations = std::min(n, size_t(100));  
+                for (size_t i = 0; i < operations; i++) {
                     pq.removeMin();
                 }
             });
@@ -63,41 +69,59 @@ void testRemoveMinHeap(const std::vector<int>& sizes) {
             if (n > 100) {
                 time = time * (n / 100.0);
             }
+            
+            results.push_back({n, time});
+            std::cout << "Heap-based removeMin test - Size: " << n << ", Time: " << time << " μs" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Error during heap removeMin test with n=" << n << ": " << e.what() << std::endl;
-            time = -1;  // Mark as error
+            results.push_back({n, -1});  
         }
-        
-        results.push_back({n, time});
-        std::cout << "Heap-based removeMin test - Size: " << n << ", Time: " << time << " μs" << std::endl;
+        catch (...) {
+            std::cerr << "Unknown error during heap removeMin test with n=" << n << std::endl;
+            results.push_back({n, -1});  
+        }
     }
     
     saveResults("priorityQueueResults/heap_removeMin_results.txt", results);
 }
 
-// Test removeMin for set-based PriorityQueue
+
+
+// Test removeMin for set-based PriorityQueue with additional debugging
 void testRemoveMinSet(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
     std::random_device rd;
     std::mt19937 gen(rd());
 
     for (size_t n : sizes) {
-        PriorityQueue pq(n*2);  // Make capacity twice the number of elements to avoid range issues
-        std::uniform_int_distribution<> distrib(0, n-1);  // Keep values within size range
-        
-        // Pre-populate the priority queue with random elements
-        for (size_t i = 0; i < n; i++) {
-            pq.add(distrib(gen));
-        }
-        
-        // Time the operation of removing min element
-        double time = 0.0;
         try {
+            if (n == 0) {
+                results.push_back({0, 0});
+                continue;
+            }
+            
+            PriorityQueue pq(n*2);  
+
+            std::uniform_int_distribution<> distrib(0, std::max(1, (int)n-1));  
+            
+            for (size_t i = 0; i < n; i++) {
+                int value = distrib(gen);
+                try {
+                    pq.add(value);
+                    if (i % 500 == 0) { // Log progress for large n
+                        std::cout << "Added " << i << " elements so far" << std::endl;
+                    }
+                } catch (const std::exception& e) {
+                    std::cerr << "Error during set add at i=" << i << ": " << e.what() << std::endl;
+                    throw; // Re-throw to continue outer error handling
+                }
+            }
+            
+            double time = 0.0;
             time = measureTime([&]() {
-                // We'll test removeMin multiple times to get a more stable measurement
-                size_t operations = std::min(n, size_t(100));  // At most 100 operations for large n
-                for (size_t i = 0; i < operations && !pq.isEmpty(); i++) {
+                size_t operations = std::min(n, size_t(100));  
+                for (size_t i = 0; i < operations; i++) {
                     pq.removeMin();
                 }
             });
@@ -106,102 +130,142 @@ void testRemoveMinSet(const std::vector<int>& sizes) {
             if (n > 100) {
                 time = time * (n / 100.0);
             }
+            
+            results.push_back({n, time});
+            std::cout << "Set-based removeMin test - Size: " << n << ", Time: " << time << " μs" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Error during set removeMin test with n=" << n << ": " << e.what() << std::endl;
-            time = -1;  // Mark as error
+            results.push_back({n, -1});  
         }
-        
-        results.push_back({n, time});
-        std::cout << "Set-based removeMin test - Size: " << n << ", Time: " << time << " μs" << std::endl;
+        catch (...) {
+            std::cerr << "Unknown error during set removeMin test with n=" << n << std::endl;
+            results.push_back({n, -1});  
+        }
     }
-    
+                
     saveResults("priorityQueueResults/set_removeMin_results.txt", results);
 }
-
+                
 // Test worst-case scenario for heap-based (removing all elements in order)
 void testRemoveMinHeapWorstCase(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
 
     for (size_t n : sizes) {
-        PriorityQueue pq(n);
-        
-        // Populate with n elements in reverse order to create a complete heap
-        for (size_t i = 0; i < n; i++) {
-            pq.add(i);
-        }
-        
-        // Time the operation of removing all elements
-        double time = 0.0;
         try {
+            PriorityHeap pq(n);
+            
+            for (size_t i = 0; i < n; i++) {
+                try {
+                    pq.add(i);
+
+                } catch (const std::exception& e) {
+                    std::cerr << "Error during heap worst-case add at i=" << i << ": " << e.what() << std::endl;
+                    throw; 
+                }
+            }
+            
+            double time = 0.0;
             time = measureTime([&]() {
-                for (size_t i = 0; i < n && !pq.isEmpty(); i++) {
+                for (size_t i = 0; i < n; i++) {
                     pq.removeMin();
                 }
             });
+            
+            results.push_back({n, time});
+            std::cout << "Heap-based removeMin worst case - Size: " << n << ", Time: " << time << " μs" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Error during heap worst-case test with n=" << n << ": " << e.what() << std::endl;
-            time = -1;  // Mark as error
+            results.push_back({n, -1});  
         }
-        
-        results.push_back({n, time});
-        std::cout << "Heap-based removeMin worst case - Size: " << n << ", Time: " << time << " μs" << std::endl;
+        catch (...) {
+            std::cerr << "Unknown error during heap worst-case test with n=" << n << std::endl;
+            results.push_back({n, -1});  
+        }
     }
     
     saveResults("priorityQueueResults/heap_removeMin_worst_results.txt", results);
 }
 
-// Test worst-case scenario for set-based (removing all elements from a full set)
+// Test worst-case scenario for set-based (removing all elements from a full set) with debugging
 void testRemoveMinSetWorstCase(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
 
     for (size_t n : sizes) {
-        PriorityQueue pq(n*2);  // Double capacity to ensure we have enough space
-        
-        // Populate with n elements in a way that might create a worst-case
-        for (size_t i = 0; i < n; i++) {
-            pq.add(i);  // Add sequential elements to ensure we can find them
-        }
-        
-        // Time the operation of removing all elements
-        double time = 0.0;
         try {
+            PriorityQueue pq(n*2);  
+            
+            for (size_t i = 0; i < n; i++) {
+                try {
+                    pq.add(i);  
+                } catch (const std::exception& e) {
+                    std::cerr << "Error during set worst-case add at i=" << i << ": " << e.what() << std::endl;
+                    throw; 
+                }
+            }
+            
+            std::cout << "Testing removeMin operations on set worst-case" << std::endl;
+            
+            double time = 0.0;
             time = measureTime([&]() {
-                for (size_t i = 0; i < n && !pq.isEmpty(); i++) {
+                for (size_t i = 0; i < n; i++) {
                     pq.removeMin();
                 }
             });
+            
+            results.push_back({n, time});
+            std::cout << "Set-based removeMin worst case - Size: " << n << ", Time: " << time << " μs" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Error during set worst-case test with n=" << n << ": " << e.what() << std::endl;
-            time = -1;  // Mark as error
+            results.push_back({n, -1});  
         }
-        
-        results.push_back({n, time});
-        std::cout << "Set-based removeMin worst case - Size: " << n << ", Time: " << time << " μs" << std::endl;
+        catch (...) {
+            std::cerr << "Unknown error during set worst-case test with n=" << n << std::endl;
+            results.push_back({n, -1});  
+        }
     }
     
     saveResults("priorityQueueResults/set_removeMin_worst_results.txt", results);
 }
 
+
+
 int main() {
-    // Create the results directory if it doesn't exist
-    std::system("mkdir -p priorityQueueResults");
-    
-    // Define a range of sizes to test
+
     std::vector<int> sizes;
-    for (int i = 100; i <= 5000; i += 100) {  // Testing from 100 to 5000 by steps of 100
+    for (int i = 100; i <= 5000; i += 100) {  
         sizes.push_back(i);
     }
 
-    // Run average-case tests
-    testRemoveMinHeap(sizes);
-    testRemoveMinSet(sizes);
+    try {
+        std::cout << "\n=== RUNNING HEAP AVERAGE CASE TEST ===\n" << std::endl;
+        testRemoveMinHeap(sizes);
+    } catch (...) {
+        std::cerr << "Failed to complete heap average case tests" << std::endl;
+    }
     
-    // Run worst-case tests
-    testRemoveMinHeapWorstCase(sizes);
-    testRemoveMinSetWorstCase(sizes);
+    try {
+        std::cout << "\n=== RUNNING SET AVERAGE CASE TEST ===\n" << std::endl;
+        testRemoveMinSet(sizes);
+    } catch (...) {
+        std::cerr << "Failed to complete set average case tests" << std::endl;
+    }
+    
+    try {
+        std::cout << "\n=== RUNNING HEAP WORST CASE TEST ===\n" << std::endl;
+        testRemoveMinHeapWorstCase(sizes);
+    } catch (...) {
+        std::cerr << "Failed to complete heap worst case tests" << std::endl;
+    }
+    
+    try {
+        std::cout << "\n=== RUNNING SET WORST CASE TEST ===\n" << std::endl;
+        testRemoveMinSetWorstCase(sizes);
+    } catch (...) {
+        std::cerr << "Failed to complete set worst case tests" << std::endl;
+    }
 
     return 0;
 }

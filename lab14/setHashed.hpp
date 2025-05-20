@@ -15,10 +15,9 @@ private:
 
 public:
     SetHashed(size_t size = 10) : bucketCount(size) {
-        // Explicitly construct each bucket with the given size
         buckets.clear();
         for (size_t i = 0; i < size; ++i) {
-            buckets.emplace_back(size);  // Use constructor directly
+            buckets.emplace_back(size);  
         }
     }
     

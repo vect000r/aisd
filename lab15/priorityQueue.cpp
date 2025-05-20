@@ -17,7 +17,6 @@ void PriorityQueue::add(int index) {
 int PriorityQueue::removeMin() {
     int minIndex = -1;
     
-    // Szukamy elementu o najmniejszym priorytecie
     for (size_t i = 0; i < queue.getUniverseSize(); i++) {
         if (queue.contains(static_cast<int>(i))) {
             minIndex = static_cast<int>(i);
@@ -29,10 +28,8 @@ int PriorityQueue::removeMin() {
         throw std::runtime_error("Priority queue is empty");
     }
 
-    // Usuwamy element z kolejki
     queue.remove(minIndex);
     
-    // Zwracamy element o najmniejszym priorytecie
     return minIndex;
 }
 

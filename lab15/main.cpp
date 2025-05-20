@@ -7,13 +7,13 @@ void testPriorityQueue() {
     pq.add(1);
     pq.add(3);
     pq.add(5);
-    pq.display(); // Expected output: Priority Queue: {1, 3, 5}
+    pq.display(); 
     
     pq.removeMin();
-    pq.display(); // Expected output: Priority Queue: {1, 5}
+    pq.display(); 
     
     try {
-        pq.add(10); // This should throw an exception
+        pq.add(10); 
     } catch (const std::out_of_range& e) {
         std::cout << "Caught exception: " << e.what() << std::endl;
     }
