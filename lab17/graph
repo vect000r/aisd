@@ -1,0 +1,11 @@
+graph trojkat {
+    A;
+    B;
+    C;
+    
+    A -- B;
+    B -- C;
+    C -- A;
+    
+    node [shape=circle, style=filled, fillcolor=lightblue];
+}

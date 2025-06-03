@@ -33,7 +33,7 @@ void saveResults(const std::string& filename, const std::vector<std::pair<int, d
     }
 }
 
-// Test removeMin for heap-based PriorityQueue with additional debugging
+// Test removeMin for heap-based PriorityQueue
 void testRemoveMinHeap(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
     std::random_device rd;
@@ -41,54 +41,38 @@ void testRemoveMinHeap(const std::vector<int>& sizes) {
 
     for (size_t n : sizes) {
         try {
-           
             PriorityHeap pq(n);
             std::uniform_int_distribution<> distrib(0, n*10);  
            
             for (size_t i = 0; i < n; i++) {
-                int value = distrib(gen);
-                try {
-                    pq.add(value);
-
-                } catch (const std::exception& e) {
-                    std::cerr << "Error during heap add at i=" << i << ": " << e.what() << std::endl;
-                    throw; 
-                }
+                pq.add(distrib(gen));
             }
             
             double time = 0.0;
             time = measureTime([&]() {
-               
-                size_t operations = std::min(n, size_t(100));  
-                for (size_t i = 0; i < operations; i++) {
+                for (size_t i = 0; i < n; i++) {
+                    if (pq.isEmpty()) break;
                     pq.removeMin();
                 }
             });
             
-            // If we did fewer than n operations, scale the time accordingly
-            if (n > 100) {
-                time = time * (n / 100.0);
-            }
-            
-            results.push_back({n, time});
-            std::cout << "Heap-based removeMin test - Size: " << n << ", Time: " << time << " μs" << std::endl;
+            double timePerOperation = time / n;  
+            results.push_back({n, timePerOperation});
+            std::cout << "Heap-based removeMin - Size: " << n << ", Time per op: " << timePerOperation << " μs" << std::endl;
         }
         catch (const std::exception& e) {
-            std::cerr << "Error during heap removeMin test with n=" << n << ": " << e.what() << std::endl;
+            std::cerr << "Error during heap test with n=" << n << ": " << e.what() << std::endl;
             results.push_back({n, -1});  
         }
         catch (...) {
-            std::cerr << "Unknown error during heap removeMin test with n=" << n << std::endl;
+            std::cerr << "Unknown error during heap test with n=" << n << std::endl;
             results.push_back({n, -1});  
         }
     }
     
-    saveResults("priorityQueueResults/heap_removeMin_results.txt", results);
+    saveResults("priorityQueueResults/heap_removeMin_per_op_results.txt", results);
 }
 
-
-
-// Test removeMin for set-based PriorityQueue with additional debugging
 void testRemoveMinSet(const std::vector<int>& sizes) {
     std::vector<std::pair<int, double>> results;
     std::random_device rd;
@@ -109,30 +93,29 @@ void testRemoveMinSet(const std::vector<int>& sizes) {
                 int value = distrib(gen);
                 try {
                     pq.add(value);
-                    if (i % 500 == 0) { // Log progress for large n
+                    if (i % 500 == 0) {
                         std::cout << "Added " << i << " elements so far" << std::endl;
                     }
                 } catch (const std::exception& e) {
                     std::cerr << "Error during set add at i=" << i << ": " << e.what() << std::endl;
-                    throw; // Re-throw to continue outer error handling
+                    throw;
                 }
             }
             
             double time = 0.0;
+            size_t operations = std::min(n, size_t(100));
+            
             time = measureTime([&]() {
-                size_t operations = std::min(n, size_t(100));  
                 for (size_t i = 0; i < operations; i++) {
                     pq.removeMin();
                 }
             });
             
-            // If we did fewer than n operations, scale the time accordingly
-            if (n > 100) {
-                time = time * (n / 100.0);
-            }
+            // Calculate the time per operation before scaling
+            double timePerOperation = time / operations;
             
-            results.push_back({n, time});
-            std::cout << "Set-based removeMin test - Size: " << n << ", Time: " << time << " μs" << std::endl;
+            results.push_back({n, timePerOperation});
+            std::cout << "Set-based removeMin - Size: " << n << ", Time per op: " << timePerOperation << " μs" << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Error during set removeMin test with n=" << n << ": " << e.what() << std::endl;
@@ -144,7 +127,7 @@ void testRemoveMinSet(const std::vector<int>& sizes) {
         }
     }
                 
-    saveResults("priorityQueueResults/set_removeMin_results.txt", results);
+    saveResults("priorityQueueResults/set_removeMin_per_op_results.txt", results);
 }
                 
 // Test worst-case scenario for heap-based (removing all elements in order)

@@ -49,9 +49,9 @@ def get_expected_curve(x, complexity_type):
 # --- User input ---
 
 lab_dir = input("Choose lab directory (lab13, lab14, lab15): ").strip()
-while lab_dir not in ["lab13", "lab14", "lab15"]:
-    print("Invalid input. Please enter: lab13, lab14, or lab15.")
-    lab_dir = input("Choose lab directory (lab13, lab14, lab15): ").strip()
+while lab_dir not in ["lab13", "lab14", "lab15", "lab16", "lab17", "lab17/C"]:
+    print("Invalid input. Please enter: lab13, lab14, lab15 or lab16.")
+    lab_dir = input("Choose lab directory (lab13, lab14, lab15, lab16): ").strip()
 
 test_dir = input("Enter the specific directory inside 'complexitytests' (e.g. setHashedResults): ").strip()
 filename = input("Enter the name of the .txt file (e.g. data.txt): ").strip()
@@ -70,8 +70,8 @@ t = []
 with open(path_to_file, "r") as data:
     for line in data:
         numbers = line.split()
-        n.append(int(numbers[0]))
-        t.append(int(numbers[1]))
+        n.append(float(numbers[0]))
+        t.append(float(numbers[1]))
 
 x_raw = np.array(n)
 y_raw = np.array(t)
