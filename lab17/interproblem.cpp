@@ -15,10 +15,10 @@ std::vector<int> getMovements() {
 bool areConflicted(int movement1, int movement2) {
     int from1 = movement1 / 10;
     int to1 = movement1 % 10;
-    
+
     int from2 = movement2 / 10;
     int to2 = movement2 % 10;
-    
+
     if (from1 == 5 || from2 == 5) {
         if (from1 == 5 && from2 != 5) {
             return true;
@@ -55,7 +55,7 @@ Graph buildGraph() {
             }
         }
     }
-    
+
     return conflictGraph;
 }
 
@@ -67,19 +67,19 @@ std::map<int, int> colorGraph(Graph& graph, const std::vector<int>& vertices) {
 
     for (const auto& v : sortedVertices ) {
         std::set<int> usedColors;
-        
+
         for (const auto& n : graph.neighbours(v)) {
             if (colorMap.find(n) != colorMap.end()) {
                 usedColors.insert(colorMap[n]);
             }
         }
-        
+
         int color = 0;
         while (usedColors.count(color)) color++;
-        
+
         colorMap[v] = color;
     }
-    
+
     return colorMap;
 }
 

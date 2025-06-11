@@ -7,5 +7,5 @@ graph trojkat {
     B -- C;
     C -- A;
     
-    node [shape=circle, style=filled, fillcolor=lightblue];
+    node [shape=circle];
 }
